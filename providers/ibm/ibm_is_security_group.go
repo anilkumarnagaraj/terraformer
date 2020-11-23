@@ -56,7 +56,7 @@ func (g *SecurityGroupGenerator) InitResources() error {
 	region := envFallBack([]string{"IC_REGION"}, "us-south")
 	apiKey := os.Getenv("IC_API_KEY")
 	if apiKey == "" {
-		log.Fatal("No API key set")
+		return fmt.Errorf("No API key set")
 	}
 
 	rg := g.Args["resource_group"]

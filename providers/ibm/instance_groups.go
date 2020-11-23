@@ -146,7 +146,7 @@ func (g *InstanceGroupGenerator) handleInstanceGroups(sess *vpcv1.VpcV1) {
 func (g *InstanceGroupGenerator) InitResources() error {
 	apiKey := os.Getenv("IBMCLOUD_API_KEY")
 	if apiKey == "" {
-		log.Fatal("No API key set")
+		return fmt.Errorf("No API key set")
 	}
 
 	// Instantiate the service with an API key based IAM authenticator
