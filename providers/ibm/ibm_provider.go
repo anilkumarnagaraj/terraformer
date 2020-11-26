@@ -53,7 +53,7 @@ func (IBMProvider) GetResourceConnections() map[string]map[string][]string {
 
 func (p *IBMProvider) GetSupportedService() map[string]terraformutils.ServiceGenerator {
 	return map[string]terraformutils.ServiceGenerator{
-		"keyprotect":                 &KPGenerator{},
+		"ibm_kp":                     &KPGenerator{},
 		"ibm_container_vpc_cluster":  &VPCClusterGenerator{},
 		"ibm_container_cluster":      &ContainerClusterGenerator{},
 		"ibm_cos":                    &COSGenerator{},
