@@ -912,14 +912,6 @@ List of supported IBM Cloud resources:
     * `ibm_is_instance_group`
     * `ibm_is_instance_group_manager`
     * `ibm_is_instance_group_manager_policy`
-*   `ibm_is_vpc`
-    * `ibm_is_vpc`
-    * `ibm_is_vpc_address_prefix`
-    * `ibm_is_vpc_route`
-*   `ibm_is_subnet`
-*   `ibm_is_instance`
-*   `ibm_is_security_group`
-    * `ibm_is_security_group_rule` 
 *   `ibm_cis`
     * `ibm_cis`
     * `ibm_cis_dns_record`
@@ -928,7 +920,27 @@ List of supported IBM Cloud resources:
     * `ibm_cis_global_load_balancer`
     * `ibm_cis_origin_pool`
     * `ibm_cis_healthcheck`
-    * `ibm_cis_rate_limit`     
+    * `ibm_cis_rate_limit`   
+*   `ibm_is_vpc`
+    * `ibm_is_vpc`
+    * `ibm_is_vpc_address_prefix`
+    * `ibm_is_vpc_route`
+*   `ibm_is_subnet`
+*   `ibm_is_instance`
+*   `ibm_is_security_group`
+    * `ibm_is_security_group_rule`
+*   `ibm_is_network_acl`
+*   `ibm_is_public_gateway`
+*   `ibm_is_volume`
+*   `ibm_is_vpn_gateway`
+    * `ibm_is_vpn_gateway_connections`
+*   `ibm_is_lb`
+    * `ibm_is_lb_pool`
+    * `ibm_is_lb_pool_member`
+    * `ibm_is_lb_listener`
+    * `ibm_is_lb_listener_policy`
+    * `ibm_is_lb_listener_policy_rule`
+ 
 
 ### Use with DigitalOcean
 

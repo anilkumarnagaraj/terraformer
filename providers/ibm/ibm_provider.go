@@ -62,11 +62,16 @@ func (p *IBMProvider) GetSupportedService() map[string]terraformutils.ServiceGen
 		"ibm_database_redis":         &DatabaseRedisGenerator{},
 		"ibm_iam":                    &IAMGenerator{},
 		"ibm_is_instance_group":      &InstanceGroupGenerator{},
+		"ibm_cis":                    &CISGenerator{},
 		"ibm_is_vpc":                 &VPCGenerator{},
 		"ibm_is_subnet":              &SubnetGenerator{},
 		"ibm_is_instance":            &InstanceGenerator{},
 		"ibm_is_security_group":      &SecurityGroupGenerator{},
-		"ibm_cis":                    &CISGenerator{},
+		"ibm_is_network_acl":         &NetworkACLGenerator{},
+		"ibm_is_public_gateway":      &PublicGatewayGenerator{},
+		"ibm_is_volume":              &VolumeGenerator{},
+		"ibm_is_vpn_gateway":         &VPNGatewayGenerator{},
+		"ibm_is_lb":                  &LBGenerator{},
 	}
 }
 
