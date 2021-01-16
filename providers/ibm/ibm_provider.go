@@ -67,6 +67,8 @@ func (p *IBMProvider) GetSupportedService() map[string]terraformutils.ServiceGen
 		"ibm_is_instance":            &InstanceGenerator{},
 		"ibm_is_security_group":      &SecurityGroupGenerator{},
 		"ibm_cis":                    &CISGenerator{},
+		"ibm_function_cf":            &CloudFunctionCFGenerator{},
+		"ibm_function_iam":           &CloudFunctionIAMGenerator{},
 	}
 }
 
