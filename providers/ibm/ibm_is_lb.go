@@ -23,6 +23,7 @@ import (
 	"github.com/IBM/vpc-go-sdk/vpcv1"
 )
 
+// LBGenerator ...
 type LBGenerator struct {
 	IBMService
 }
@@ -38,61 +39,82 @@ func (g LBGenerator) createLBResources(lbID, lbName string) terraformutils.Resou
 	return resources
 }
 
-func (g LBGenerator) createLBPoolResources(lbID, lbPoolID, lbPoolName string) terraformutils.Resource {
+func (g LBGenerator) createLBPoolResources(lbID, lbPoolID, lbPoolName string, dependsOn []string) terraformutils.Resource {
 	var resources terraformutils.Resource
-	resources = terraformutils.NewSimpleResource(
+	resources = terraformutils.NewResource(
 		fmt.Sprintf("%s/%s", lbID, lbPoolID),
 		lbPoolName,
 		"ibm_is_lb_pool",
 		"ibm",
-		[]string{})
+		map[string]string{},
+		[]string{},
+		map[string]interface{}{
+			"depends_on": dependsOn,
+		})
 	return resources
 }
 
-func (g LBGenerator) createLBPoolMemberResources(lbID, lbPoolID, lbPoolMemberID, lbPoolMemberName string) terraformutils.Resource {
+func (g LBGenerator) createLBPoolMemberResources(lbID, lbPoolID, lbPoolMemberID, lbPoolMemberName string, dependsOn []string) terraformutils.Resource {
 	var resources terraformutils.Resource
-	resources = terraformutils.NewSimpleResource(
+	resources = terraformutils.NewResource(
 		fmt.Sprintf("%s/%s/%s", lbID, lbPoolID, lbPoolMemberID),
 		lbPoolMemberName,
 		"ibm_is_lb_pool_member",
 		"ibm",
-		[]string{})
+		map[string]string{},
+		[]string{},
+		map[string]interface{}{
+			"depends_on": dependsOn,
+		})
 	return resources
 }
 
-func (g LBGenerator) createLBListenerResources(lbID, lbListenerID, lbListenerName string) terraformutils.Resource {
+func (g LBGenerator) createLBListenerResources(lbID, lbListenerID, lbListenerName string, dependsOn []string) terraformutils.Resource {
 	var resources terraformutils.Resource
-	resources = terraformutils.NewSimpleResource(
+	resources = terraformutils.NewResource(
 		fmt.Sprintf("%s/%s", lbID, lbListenerID),
 		lbListenerName,
 		"ibm_is_lb_listener",
 		"ibm",
-		[]string{})
+		map[string]string{},
+		[]string{},
+		map[string]interface{}{
+			"depends_on": dependsOn,
+		})
 	return resources
 }
 
-func (g LBGenerator) createLBListenerPolicyResources(lbID, lbListenerID, lbListenerPolicyID, lbListenerPolicyName string) terraformutils.Resource {
+func (g LBGenerator) createLBListenerPolicyResources(lbID, lbListenerID, lbListenerPolicyID, lbListenerPolicyName string, dependsOn []string) terraformutils.Resource {
 	var resources terraformutils.Resource
-	resources = terraformutils.NewSimpleResource(
+	resources = terraformutils.NewResource(
 		fmt.Sprintf("%s/%s/%s", lbID, lbListenerID, lbListenerPolicyID),
 		lbListenerPolicyName,
 		"ibm_is_lb_listener_policy",
 		"ibm",
-		[]string{})
+		map[string]string{},
+		[]string{},
+		map[string]interface{}{
+			"depends_on": dependsOn,
+		})
 	return resources
 }
 
-func (g LBGenerator) createLBListenerPolicyRuleResources(lbID, lbListenerID, lbListenerPolicyID, lbListenerPolicyRuleID, lbListenerPolicyName string) terraformutils.Resource {
+func (g LBGenerator) createLBListenerPolicyRuleResources(lbID, lbListenerID, lbListenerPolicyID, lbListenerPolicyRuleID, lbListenerPolicyName string, dependsOn []string) terraformutils.Resource {
 	var resources terraformutils.Resource
-	resources = terraformutils.NewSimpleResource(
+	resources = terraformutils.NewResource(
 		fmt.Sprintf("%s/%s/%s/%s", lbID, lbListenerID, lbListenerPolicyID, lbListenerPolicyRuleID),
 		lbListenerPolicyName,
 		"ibm_is_lb_listener_policy_rule",
 		"ibm",
-		[]string{})
+		map[string]string{},
+		[]string{},
+		map[string]interface{}{
+			"depends_on": dependsOn,
+		})
 	return resources
 }
 
+// InitResources ...
 func (g *LBGenerator) InitResources() error {
 	region := envFallBack([]string{"IC_REGION"}, "us-south")
 	apiKey := os.Getenv("IC_API_KEY")
@@ -126,6 +148,9 @@ func (g *LBGenerator) InitResources() error {
 	allrecs = append(allrecs, lbs.LoadBalancers...)
 
 	for _, lb := range allrecs {
+		var dependsOn []string
+		dependsOn = append(dependsOn,
+			"ibm_is_lb."+terraformutils.TfSanitize(*lb.Name))
 		g.Resources = append(g.Resources, g.createLBResources(*lb.ID, *lb.Name))
 		listLoadBalancerPoolsOptions := &vpcv1.ListLoadBalancerPoolsOptions{
 			LoadBalancerID: lb.ID,
@@ -135,7 +160,7 @@ func (g *LBGenerator) InitResources() error {
 			return fmt.Errorf("Error Fetching Load Balancer Pools %s\n%s", err, response)
 		}
 		for _, lbPool := range lbPools.Pools {
-			g.Resources = append(g.Resources, g.createLBPoolResources(*lb.ID, *lbPool.ID, *lbPool.Name))
+			g.Resources = append(g.Resources, g.createLBPoolResources(*lb.ID, *lbPool.ID, *lbPool.Name, dependsOn))
 			listLoadBalancerPoolMembersOptions := &vpcv1.ListLoadBalancerPoolMembersOptions{
 				LoadBalancerID: lb.ID,
 				PoolID:         lbPool.ID,
@@ -145,7 +170,10 @@ func (g *LBGenerator) InitResources() error {
 				return fmt.Errorf("Error Fetching Load Balancer Pool Members %s\n%s", err, response)
 			}
 			for _, lbPoolMember := range lbPoolMembers.Members {
-				g.Resources = append(g.Resources, g.createLBPoolMemberResources(*lb.ID, *lbPool.ID, *lbPoolMember.ID, *lbPool.Name))
+				var dependsOn1 []string
+				dependsOn1 = append(dependsOn,
+					"ibm_is_lb_pool."+terraformutils.TfSanitize(*lbPool.Name))
+				g.Resources = append(g.Resources, g.createLBPoolMemberResources(*lb.ID, *lbPool.ID, *lbPoolMember.ID, *lbPool.Name, dependsOn1))
 			}
 		}
 
@@ -157,7 +185,7 @@ func (g *LBGenerator) InitResources() error {
 			return fmt.Errorf("Error Fetching Load Balancer Listeners %s\n%s", err, response)
 		}
 		for _, lbListener := range lbListeners.Listeners {
-			g.Resources = append(g.Resources, g.createLBListenerResources(*lb.ID, *lbListener.ID, *lbListener.ID))
+			g.Resources = append(g.Resources, g.createLBListenerResources(*lb.ID, *lbListener.ID, *lbListener.ID, dependsOn))
 			listLoadBalancerListenerPoliciesOptions := &vpcv1.ListLoadBalancerListenerPoliciesOptions{
 				LoadBalancerID: lb.ID,
 				ListenerID:     lbListener.ID,
@@ -167,7 +195,10 @@ func (g *LBGenerator) InitResources() error {
 				return fmt.Errorf("Error Fetching Load Balancer Listener Policies %s\n%s", err, response)
 			}
 			for _, lbListenerPolicy := range lbListenerPolicies.Policies {
-				g.Resources = append(g.Resources, g.createLBListenerPolicyResources(*lb.ID, *lbListener.ID, *lbListenerPolicy.ID, *lbListenerPolicy.Name))
+				var dependsOn2 []string
+				dependsOn2 = append(dependsOn,
+					"ibm_is_lb_listener."+terraformutils.TfSanitize(*lbListener.ID))
+				g.Resources = append(g.Resources, g.createLBListenerPolicyResources(*lb.ID, *lbListener.ID, *lbListenerPolicy.ID, *lbListenerPolicy.Name, dependsOn2))
 				listLoadBalancerListenerPolicyRulesOptions := &vpcv1.ListLoadBalancerListenerPolicyRulesOptions{
 					LoadBalancerID: lb.ID,
 					ListenerID:     lbListener.ID,
@@ -178,7 +209,9 @@ func (g *LBGenerator) InitResources() error {
 					return fmt.Errorf("Error Fetching Load Balancer Listener Policy Rules %s\n%s", err, response)
 				}
 				for _, lbListenerPolicyRule := range lbListenerPolicyRules.Rules {
-					g.Resources = append(g.Resources, g.createLBListenerPolicyRuleResources(*lb.ID, *lbListener.ID, *lbListenerPolicy.ID, *lbListenerPolicyRule.ID, *lbListenerPolicyRule.ID))
+					dependsOn2 = append(dependsOn2,
+						"ibm_is_lb_listener_policy."+terraformutils.TfSanitize(*lbListenerPolicy.Name))
+					g.Resources = append(g.Resources, g.createLBListenerPolicyRuleResources(*lb.ID, *lbListener.ID, *lbListenerPolicy.ID, *lbListenerPolicyRule.ID, *lbListenerPolicyRule.ID, dependsOn2))
 
 				}
 			}

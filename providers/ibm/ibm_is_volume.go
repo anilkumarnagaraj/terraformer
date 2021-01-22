@@ -24,6 +24,7 @@ import (
 	"github.com/IBM/vpc-go-sdk/vpcv1"
 )
 
+// VolumeGenerator ...
 type VolumeGenerator struct {
 	IBMService
 }
@@ -39,6 +40,7 @@ func (g VolumeGenerator) createVolumeResources(volID, volName string) terraformu
 	return resources
 }
 
+// InitResources ...
 func (g *VolumeGenerator) InitResources() error {
 	region := envFallBack([]string{"IC_REGION"}, "us-south")
 	apiKey := os.Getenv("IC_API_KEY")

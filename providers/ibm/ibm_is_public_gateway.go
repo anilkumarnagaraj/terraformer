@@ -24,6 +24,7 @@ import (
 	"github.com/IBM/vpc-go-sdk/vpcv1"
 )
 
+// PublicGatewayGenerator ...
 type PublicGatewayGenerator struct {
 	IBMService
 }
@@ -39,6 +40,7 @@ func (g PublicGatewayGenerator) createPublicGatewayResources(publicGatewayID, pu
 	return resources
 }
 
+// InitResources ...
 func (g *PublicGatewayGenerator) InitResources() error {
 	var resoureGroup string
 	region := envFallBack([]string{"IC_REGION"}, "us-south")

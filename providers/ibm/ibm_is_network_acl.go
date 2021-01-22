@@ -24,6 +24,7 @@ import (
 	"github.com/IBM/vpc-go-sdk/vpcv1"
 )
 
+// NetworkACLGenerator ...
 type NetworkACLGenerator struct {
 	IBMService
 }
@@ -39,6 +40,7 @@ func (g NetworkACLGenerator) createNetworkACLResources(nwaclID, nwaclName string
 	return resources
 }
 
+// InitResources ...
 func (g *NetworkACLGenerator) InitResources() error {
 	var resoureGroup string
 	region := envFallBack([]string{"IC_REGION"}, "us-south")

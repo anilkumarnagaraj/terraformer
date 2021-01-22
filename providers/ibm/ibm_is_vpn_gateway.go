@@ -23,6 +23,7 @@ import (
 	"github.com/IBM/vpc-go-sdk/vpcv1"
 )
 
+// VPNGatewayGenerator ...
 type VPNGatewayGenerator struct {
 	IBMService
 }
@@ -38,17 +39,22 @@ func (g VPNGatewayGenerator) createVPNGatewayResources(vpngwID, vpngwName string
 	return resources
 }
 
-func (g VPNGatewayGenerator) createVPNGatewayConnectionResources(vpngwID, vpngwConnectionID, vpngwConnectionName string) terraformutils.Resource {
+func (g VPNGatewayGenerator) createVPNGatewayConnectionResources(vpngwID, vpngwConnectionID, vpngwConnectionName string, dependsOn []string) terraformutils.Resource {
 	var resources terraformutils.Resource
-	resources = terraformutils.NewSimpleResource(
+	resources = terraformutils.NewResource(
 		fmt.Sprintf("%s/%s", vpngwID, vpngwConnectionID),
 		vpngwConnectionName,
 		"ibm_is_vpn_gateway_connections",
 		"ibm",
-		[]string{})
+		map[string]string{},
+		[]string{},
+		map[string]interface{}{
+			"depends_on": dependsOn,
+		})
 	return resources
 }
 
+// InitResources ...
 func (g *VPNGatewayGenerator) InitResources() error {
 	var resoureGroup string
 	region := envFallBack([]string{"IC_REGION"}, "us-south")
@@ -96,6 +102,9 @@ func (g *VPNGatewayGenerator) InitResources() error {
 
 	for _, gw := range allrecs {
 		vpngw := gw.(*vpcv1.VPNGateway)
+		var dependsOn []string
+		dependsOn = append(dependsOn,
+			"ibm_is_vpn_gateway."+terraformutils.TfSanitize(*vpngw.Name))
 		g.Resources = append(g.Resources, g.createVPNGatewayResources(*vpngw.ID, *vpngw.Name))
 		listVPNGatewayConnectionsOptions := &vpcv1.ListVPNGatewayConnectionsOptions{
 			VPNGatewayID: vpngw.ID,
@@ -106,7 +115,7 @@ func (g *VPNGatewayGenerator) InitResources() error {
 		}
 		for _, connection := range vpngwConnections.Connections {
 			vpngwConnection := connection.(*vpcv1.VPNGatewayConnection)
-			g.Resources = append(g.Resources, g.createVPNGatewayConnectionResources(*vpngw.ID, *vpngwConnection.ID, *vpngwConnection.Name))
+			g.Resources = append(g.Resources, g.createVPNGatewayConnectionResources(*vpngw.ID, *vpngwConnection.ID, *vpngwConnection.Name, dependsOn))
 		}
 	}
 	return nil
