@@ -161,6 +161,9 @@ func (g *LBGenerator) InitResources() error {
 		}
 		for _, lbPool := range lbPools.Pools {
 			g.Resources = append(g.Resources, g.createLBPoolResources(*lb.ID, *lbPool.ID, *lbPool.Name, dependsOn))
+			var dependsOn1 []string
+			dependsOn1 = append(dependsOn,
+				"ibm_is_lb_pool."+terraformutils.TfSanitize(*lbPool.Name))
 			listLoadBalancerPoolMembersOptions := &vpcv1.ListLoadBalancerPoolMembersOptions{
 				LoadBalancerID: lb.ID,
 				PoolID:         lbPool.ID,
@@ -170,9 +173,6 @@ func (g *LBGenerator) InitResources() error {
 				return fmt.Errorf("Error Fetching Load Balancer Pool Members %s\n%s", err, response)
 			}
 			for _, lbPoolMember := range lbPoolMembers.Members {
-				var dependsOn1 []string
-				dependsOn1 = append(dependsOn,
-					"ibm_is_lb_pool."+terraformutils.TfSanitize(*lbPool.Name))
 				g.Resources = append(g.Resources, g.createLBPoolMemberResources(*lb.ID, *lbPool.ID, *lbPoolMember.ID, *lbPool.Name, dependsOn1))
 			}
 		}
@@ -186,6 +186,9 @@ func (g *LBGenerator) InitResources() error {
 		}
 		for _, lbListener := range lbListeners.Listeners {
 			g.Resources = append(g.Resources, g.createLBListenerResources(*lb.ID, *lbListener.ID, *lbListener.ID, dependsOn))
+			var dependsOn2 []string
+			dependsOn2 = append(dependsOn,
+				"ibm_is_lb_listener."+terraformutils.TfSanitize(*lbListener.ID))
 			listLoadBalancerListenerPoliciesOptions := &vpcv1.ListLoadBalancerListenerPoliciesOptions{
 				LoadBalancerID: lb.ID,
 				ListenerID:     lbListener.ID,
@@ -195,10 +198,9 @@ func (g *LBGenerator) InitResources() error {
 				return fmt.Errorf("Error Fetching Load Balancer Listener Policies %s\n%s", err, response)
 			}
 			for _, lbListenerPolicy := range lbListenerPolicies.Policies {
-				var dependsOn2 []string
-				dependsOn2 = append(dependsOn,
-					"ibm_is_lb_listener."+terraformutils.TfSanitize(*lbListener.ID))
 				g.Resources = append(g.Resources, g.createLBListenerPolicyResources(*lb.ID, *lbListener.ID, *lbListenerPolicy.ID, *lbListenerPolicy.Name, dependsOn2))
+				dependsOn2 = append(dependsOn2,
+					"ibm_is_lb_listener_policy."+terraformutils.TfSanitize(*lbListenerPolicy.Name))
 				listLoadBalancerListenerPolicyRulesOptions := &vpcv1.ListLoadBalancerListenerPolicyRulesOptions{
 					LoadBalancerID: lb.ID,
 					ListenerID:     lbListener.ID,
@@ -209,8 +211,6 @@ func (g *LBGenerator) InitResources() error {
 					return fmt.Errorf("Error Fetching Load Balancer Listener Policy Rules %s\n%s", err, response)
 				}
 				for _, lbListenerPolicyRule := range lbListenerPolicyRules.Rules {
-					dependsOn2 = append(dependsOn2,
-						"ibm_is_lb_listener_policy."+terraformutils.TfSanitize(*lbListenerPolicy.Name))
 					g.Resources = append(g.Resources, g.createLBListenerPolicyRuleResources(*lb.ID, *lbListener.ID, *lbListenerPolicy.ID, *lbListenerPolicyRule.ID, *lbListenerPolicyRule.ID, dependsOn2))
 
 				}

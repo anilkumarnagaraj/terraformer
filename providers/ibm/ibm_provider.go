@@ -74,6 +74,13 @@ func (p *IBMProvider) GetSupportedService() map[string]terraformutils.ServiceGen
 		"ibm_is_volume":              &VolumeGenerator{},
 		"ibm_is_vpn_gateway":         &VPNGatewayGenerator{},
 		"ibm_is_lb":                  &LBGenerator{},
+		"ibm_is_ssh_key":             &SSHKeyGenerator{},
+		"ibm_is_floating_ip":         &FloatingIPGenerator{},
+		"ibm_is_image":               &ImageGenerator{},
+		"ibm_is_ipsec_policy":        &IpsecGenerator{},
+		"ibm_is_ike_policy":          &IkeGenerator{},
+		"ibm_is_flow_log":            &FlowLogGenerator{},
+		"ibm_is_instance_template":   &InstanceTemplateGenerator{},
 	}
 }
 

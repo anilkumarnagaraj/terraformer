@@ -959,6 +959,8 @@ List of supported IBM Cloud resources:
     * `ibm_is_vpc`
     * `ibm_is_vpc_address_prefix`
     * `ibm_is_vpc_route`
+    * `ibm_is_vpc_routing_table`
+    * `ibm_is_vpc_routing_table_route`
 *   `ibm_is_subnet`
 *   `ibm_is_instance`
 *   `ibm_is_security_group`
@@ -974,6 +976,13 @@ List of supported IBM Cloud resources:
     * `ibm_is_lb_listener`
     * `ibm_is_lb_listener_policy`
     * `ibm_is_lb_listener_policy_rule`
+*   `ibm_is_floating_ip`
+*   `ibm_is_flow_log`
+*   `ibm_is_ike_policy`
+*   `ibm_is_image`
+*   `ibm_is_instance_template`
+*   `ibm_is_ipsec_policy`
+*   `ibm_is_ssh_key`
  
 
 ### Use with DigitalOcean
