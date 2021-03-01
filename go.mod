@@ -6,11 +6,11 @@ require (
 	cloud.google.com/go v0.74.0
 	cloud.google.com/go/logging v1.1.2
 	cloud.google.com/go/storage v1.12.0
-	github.com/Azure/azure-sdk-for-go v42.3.0+incompatible
+	github.com/Azure/azure-sdk-for-go v51.2.0+incompatible
 	github.com/Azure/azure-storage-blob-go v0.10.0
-	github.com/Azure/go-autorest/autorest v0.11.12
+	github.com/Azure/go-autorest/autorest v0.11.18
 	github.com/DataDog/datadog-api-client-go v1.0.0-beta.14
-	github.com/IBM-Cloud/bluemix-go v0.0.0-20201210085054-cdf09378fdd9
+	github.com/IBM-Cloud/bluemix-go v0.0.0-20210211100206-be1b3989ba11
 	github.com/IBM/go-sdk-core/v3 v3.3.1
 	github.com/IBM/go-sdk-core/v4 v4.9.0
 	github.com/IBM/ibm-cos-sdk-go v1.5.0
@@ -20,6 +20,7 @@ require (
 	github.com/OctopusDeploy/go-octopusdeploy v1.6.0
 	github.com/aliyun/alibaba-cloud-sdk-go v1.60.295
 	github.com/aliyun/aliyun-tablestore-go-sdk v4.1.2+incompatible
+	github.com/apache/openwhisk-client-go v0.0.0-20210223214957-9c1b9014e785
 	github.com/aws/aws-sdk-go v1.36.19
 	github.com/aws/aws-sdk-go-v2 v0.24.0
 	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
@@ -32,7 +33,7 @@ require (
 	github.com/fastly/go-fastly v1.18.0
 	github.com/google/go-github/v25 v25.1.3
 	github.com/gophercloud/gophercloud v0.13.0
-	github.com/hashicorp/go-azure-helpers v0.10.0
+	github.com/hashicorp/go-azure-helpers v0.14.0
 	github.com/hashicorp/go-hclog v0.14.1
 	github.com/hashicorp/go-plugin v1.4.0
 	github.com/hashicorp/hcl v1.0.0
